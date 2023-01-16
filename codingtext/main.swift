@@ -23,7 +23,7 @@ class LinkedList {
     
     var head: Node?
     
-    var cursor = 0
+    var cursor = 1
     
     var count: Int {
         get{
@@ -92,17 +92,22 @@ class LinkedList {
     func removeElementByCursorLeft(){
         if(cursor - 1 <= 0){
             cursor = 0
-        }else if(cursor - 1 > count){
-            last?.previous?.next = nil
+        }else if(cursor >= count){
+            if(head?.next == nil){
+                head = nil
+            }else {
+                last?.previous?.next = nil
+            }
+            
             cursor = count
         }else {
             guard var node = head else {return}
             
-            for _ in 1..<cursor {
+            for _ in 1..<cursor - 1 {
                 node = node.next!
             }
-            // a b(node) 커서 c
-            print("removed: \(node.value!)")
+            
+            
             
             
             // TODO: 0번째 인덱스 삭제하는 로직 구현
@@ -111,9 +116,10 @@ class LinkedList {
                 previous.next = next
                 next?.previous = previous
             }else{
-                head = node
+                head = node.next
                 node.previous = nil
             }
+            
             
             if(cursor > 0){
                 cursor -= 1
@@ -151,7 +157,7 @@ class LinkedList {
         }else {
             guard var node = head else {return}
             
-            for _ in 1..<cursor {
+            for _ in 1..<cursor - 1{
                 node = node.next!
             }
             
@@ -207,14 +213,25 @@ for _ in 0..<commandNumber {
             if(list.cursor <= 0){
                 break
             }
+            
+            if(list.cursor - 1 > list.count){
+                list.cursor = list.count + 1
+            }
+        
             list.cursor -= 1
         case "D":
             if(list.cursor >= list.count){
                 break
             }
+            
+            if(list.cursor < 0){
+                list.cursor = 0
+            }
             list.cursor += 1
         case "B":
+            
             list.removeElementByCursorLeft()
+            print(list.cursor)
         default:
             break
         }
